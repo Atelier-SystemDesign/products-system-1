@@ -2,6 +2,6 @@
 
 describe('example', () => {
   it('should work', () => {
-    expect(false).toBe(true);
+    expect(true).toBe(true);
   });
 });

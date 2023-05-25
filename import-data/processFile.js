@@ -35,7 +35,6 @@ const fileToDb = async (filePath, perLineCb) => {
     });
 
     let isFirstLine = true;
-
     // For each line in stream
     for await (const line of rl) {
       console.log(line);

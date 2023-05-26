@@ -1,4 +1,4 @@
-const Promise = require("bluebird");
+const Promise = require('bluebird');
 const { styles, photos, skus } = require('../models');
 
 module.exports = {

@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-describe('example', () => {
+xdescribe('example', () => {
   it('should work', () => {
     expect(true).toBe(true);
   });

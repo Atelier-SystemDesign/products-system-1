@@ -49,7 +49,6 @@ module.exports = {
           // Get and transform sku data
           const skuData = (await skus.getAll(style.id)).rows
             .reduce((accum, current) => {
-              console.log('HERE', accum, current);
               // eslint-disable-next-line no-param-reassign
               accum[current.id] = {
                 quantity: current.quantity || 0,
@@ -62,7 +61,7 @@ module.exports = {
             style_id: style.id,
             name: (style.name === 'null' ? null : style.name) || '',
             sale_price: (style.sale_price === 'null' ? null : style.sale_price) || '0',
-            'default?': (style.default_style === 'null' ? null : style.default_style) || '',
+            'default?': (style.default_style === 'null' ? null : style.default_style) || false,
             original_price: (style.original_price === 'null' ? null : style.original_price) || '0',
             photos: photoData || [],
             skus: skuData || {},
@@ -73,7 +72,6 @@ module.exports = {
         product_id: productId,
         results: await Promise.all(styleData),
       };
-      console.log('bruh', result);
       res.status(200).send(result);
     } catch (e) {
       console.error('Styles', e);

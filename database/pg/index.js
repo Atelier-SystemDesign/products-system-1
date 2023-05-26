@@ -9,6 +9,4 @@ const client = new Client({
   user: 'postgres',
 });
 
-client.connect();
-
 module.exports = client;

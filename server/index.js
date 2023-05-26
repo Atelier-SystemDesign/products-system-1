@@ -1,5 +1,5 @@
 const express = require('express');
-
+const cors = require('cors');
 const morgan = require('morgan');
 
 // Router
@@ -11,9 +11,8 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
 app.use('/api', router);
 
-app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Products listening at ${process.env.SERVER_PORT}`);
-});
+module.exports = app;

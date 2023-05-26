@@ -14,7 +14,7 @@ module.exports = {
    * @param {number} productId
    */
   getAll: (productId) => client.query({
-    text: 'SELECT * FROM features WHERE product_id = $1',
+    text: 'SELECT * FROM features WHERE product_id = $1 ORDER BY id ASC',
     values: [productId],
   }),
 };

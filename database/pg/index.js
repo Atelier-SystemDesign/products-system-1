@@ -7,6 +7,7 @@ const client = new Client({
   port: process.env.POSTGRES_PORT,
   host: 'localhost',
   user: 'postgres',
+  password: 'postgres',
 });
 
 module.exports = client;

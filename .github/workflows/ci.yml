@@ -27,5 +27,12 @@ jobs:
           node-version: '14.x'
       - run: npm ci
       - run: npm test
+        env:
+          DATABASE_NAME: "atelier_products"
+          DATABASE_HOST: "localhost"
+          RAW_DATA_DIR: "/Users/thomasspradling/HackReactor/products-system-sdc/database/import_data/raw_data"
 
-  # more jobs here!
+          SERVER_PORT: 3000
+
+          POSTGRES_USER: "postgres"
+          POSTGRES_PORT: 5432

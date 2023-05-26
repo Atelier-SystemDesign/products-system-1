@@ -30,7 +30,6 @@ jobs:
         env:
           DATABASE_NAME: "atelier_products"
           DATABASE_HOST: "localhost"
-          RAW_DATA_DIR: "/Users/thomasspradling/HackReactor/products-system-sdc/database/import_data/raw_data"
 
           SERVER_PORT: 3000
 

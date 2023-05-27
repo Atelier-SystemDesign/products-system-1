@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server-dev": "nodemon ./server/app.js",
+    "server-dev": "node ./server/app.js",
     "test": "jest --verbose",
     "lint": "eslint --ext .js .",
-    "seed": "chmod u+x seed.bash; ./seed.bash"
+    "seed": "chmod u+x ./scripts/seed.bash; ./scripts/seed.bash",
+    "bench": "chmod u+x ./scripts/benchmark.bash; ./scripts/benchmark.bash",
+    "stress": "chmod u+x ./scripts/stress.bash; ./scripts/stress.bash"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "k6": "^0.0.0",
     "morgan": "^1.10.0",
     "neo4j-driver": "^5.8.1",
     "pg": "^8.11.0",

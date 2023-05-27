@@ -5,6 +5,9 @@ module.exports = {
    * Sends response for all related items of a product. Has shape `number[]`
    * @param {Express.Request} req
    * @param {Express.Response} res
+   *
+   * Complexity: O(n) where n = number of related products to product ID
+   *
    */
   get: async (req, res) => {
     try {
@@ -14,11 +17,9 @@ module.exports = {
         return;
       }
 
-      const relatedData = (await related.getAll(productId)).rows
-        .map((product) => product.related_product_id);
-      res.status(200).send(relatedData);
+      const relatedData = await related.getAll(productId);
+      res.status(200).send(relatedData.rows[0].product_ids);
     } catch (e) {
-      console.error('Related', e);
       res.status(500).send('Server error occurred!');
     }
   },

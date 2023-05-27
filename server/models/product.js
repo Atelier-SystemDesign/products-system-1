@@ -32,13 +32,35 @@ module.exports = {
    *    description: string
    *    category: string
    *    default_price: string
+   *    features: {
+   *      feature: string
+   *      value: string
+   *    }[]
    *  }
    * ```
    *
    * @param {number} productId
    */
   getOne: (productId) => client.query({
-    text: 'SELECT * FROM products WHERE id = $1',
+    text: `
+      SELECT
+        p.id,
+        p.name,
+        p.slogan,
+        p.description,
+        p.category,
+        p.default_price,
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'feature', f.feature,
+            'value', f.value
+          ) ORDER BY f.id ASC
+        ) AS features
+      FROM products AS p
+      LEFT JOIN features AS f ON f.product_id = p.id
+      WHERE p.id = $1
+      GROUP BY p.id, p.name, p.slogan, p.description, p.category, p.default_price
+    `,
     values: [productId],
   }),
 };

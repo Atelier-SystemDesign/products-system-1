@@ -11,7 +11,11 @@ module.exports = {
    * @param {number} productId
    */
   getAll: (productId) => client.query({
-    text: 'SELECT (related_product_id) FROM related_products WHERE $1 = current_product_id',
+    text: `
+      SELECT ARRAY_AGG(related_product_id) AS product_ids
+      FROM related_products
+      WHERE current_product_id = $1;
+    `,
     values: [productId],
   }),
 };

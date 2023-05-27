@@ -1,5 +1,4 @@
-const Promise = require('bluebird');
-const { styles, photos, skus } = require('../models');
+const { styles } = require('../models');
 
 module.exports = {
   /**
@@ -36,45 +35,9 @@ module.exports = {
         res.status(422).send('The request was well-formed but was unable to be followed due to missing a product_id parameter');
         return;
       }
-
-      const styleData = (await styles.getAll(productId)).rows
-        .map(async (style) => {
-          // Get and transform photo data
-          const photoData = (await photos.getAll(style.id)).rows
-            .map((photo) => ({
-              thumbnail_url: (photo.thumbnail_url === 'null' ? null : photo.thumbnail_url) || '',
-              url: (photo.url === 'null' ? null : photo.url) || '',
-            }));
-
-          // Get and transform sku data
-          const skuData = (await skus.getAll(style.id)).rows
-            .reduce((accum, current) => {
-              // eslint-disable-next-line no-param-reassign
-              accum[current.id] = {
-                quantity: current.quantity || 0,
-                size: (current.size === 'null' ? null : current.size) || '',
-              };
-              return accum;
-            }, {});
-
-          const result = {
-            style_id: style.id,
-            name: (style.name === 'null' ? null : style.name) || '',
-            sale_price: (style.sale_price === 'null' ? null : style.sale_price) || '0',
-            'default?': (style.default_style === 'null' ? null : style.default_style) || false,
-            original_price: (style.original_price === 'null' ? null : style.original_price) || '0',
-            photos: photoData || [],
-            skus: skuData || {},
-          };
-          return result;
-        });
-      const result = {
-        product_id: productId,
-        results: await Promise.all(styleData),
-      };
-      res.status(200).send(result);
+      const results = (await styles.getAll(productId)).rows;
+      res.status(200).json({ results, product_id: productId });
     } catch (e) {
-      console.error('Styles', e);
       res.status(500).send('A server error has occurred!!');
     }
   },

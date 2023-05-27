@@ -1,4 +1,4 @@
-const { products, features } = require('../models');
+const { products } = require('../models');
 
 module.exports = {
   /**
@@ -14,23 +14,16 @@ module.exports = {
    *  }[]
    * ```
    *
+   * Complexity: O(n) where n = number of products
+   *
    * @param {Express.Request} req
    * @param {Express.Response} res
    */
   getAll: async (req, res) => {
     try {
-      const result = (await products.getAll(req.query.page, req.query.count)).rows
-        .map((product) => ({
-          id: product.id,
-          name: (product.name === 'null' ? null : product.name) || '',
-          slogan: (product.slogan === 'null' ? null : product.slogan) || '',
-          description: (product.description === 'null' ? null : product.description) || '',
-          category: (product.category === 'null' ? null : product.category) || '',
-          default_price: (product.default_price === 'null' ? null : product.default_price) || '',
-        }));
-      res.status(200).send(result);
+      const result = await products.getAll(req.query.page, req.query.count);
+      res.status(200).json(result.rows);
     } catch (e) {
-      console.error('Related', e);
       res.status(500).send('A server error has occurred!');
     }
   },
@@ -63,26 +56,10 @@ module.exports = {
         return;
       }
 
-      const productData = (await products.getOne(productId)).rows[0];
-      const featureData = (await features.getAll(productId)).rows
-        .map(({ feature, value }) => ({
-          feature: (feature === 'null' ? null : feature) || '',
-          value: (value === 'null' ? null : value) || '',
-        }));
+      const productData = await products.getOne(productId);
 
-      const result = {
-        id: productData.id,
-        name: (productData.name === 'null' ? null : productData.name) || '',
-        slogan: (productData.slogan === 'null' ? null : productData.slogan) || '',
-        description: (productData.description === 'null' ? null : productData.description) || '',
-        category: (productData.category === 'null' ? null : productData.category) || '',
-        default_price: (productData.default_price === 'null' ? null : productData.default_price) || '',
-        features: featureData || [],
-      };
-
-      res.status(200).send(result);
+      res.status(200).json(productData.rows[0]);
     } catch (e) {
-      console.error('Products', e);
       res.status(500).send('A server error has occurred!');
     }
   },

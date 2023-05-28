@@ -35,16 +35,32 @@ $$ LANGUAGE plpgsql;
 
 
 WITH query_list AS (
-    SELECT CONCAT('SELECT * FROM features WHERE product_id = ', FLOOR(900000 + RANDOM() * 100000)::INT, ' ORDER BY id ASC') AS query
+    SELECT CONCAT('SELECT * FROM products WHERE (id >= ', FLOOR(900000 + RANDOM() * 10000)::INT, ') LIMIT 10') AS query
     UNION ALL
-    SELECT CONCAT('SELECT * FROM products WHERE (id >= ', FLOOR(900000 + RANDOM() * 10000)::INT, ') LIMIT 10')
+    SELECT CONCAT('
+        SELECT
+            p.id,
+            p.name,
+            p.slogan,
+            p.description,
+            p.category,
+            p.default_price,
+            JSON_AGG(
+            JSON_BUILD_OBJECT(
+                "feature", f.feature,
+                "value", f.value
+            ) ORDER BY f.id ASC
+            ) AS features
+        FROM products AS p
+        LEFT JOIN features AS f ON f.product_id = p.id
+        WHERE p.id = ', FLOOR(920000 + RANDOM() * 100000)::INT ,'
+        GROUP BY p.id, p.name, p.slogan, p.description, p.category, p.default_price')
     UNION ALL
-    SELECT CONCAT('SELECT * FROM products WHERE id = ', FLOOR(920000 + RANDOM() * 100000)::INT)
+    SELECT CONCAT('
+        SELECT ARRAY_AGG(related_product_id) AS product_ids
+            FROM related_products
+            WHERE current_product_id = ', FLOOR(920000 + RANDOM() * 20000)::INT)
     UNION ALL
-    SELECT CONCAT('SELECT (related_product_id) FROM related_products WHERE current_product_id = ', FLOOR(920000 + RANDOM() * 20000)::INT)
-    UNION ALL
-    -- SELECT CONCAT('SELECT * FROM product_styles WHERE productId = ', FLOOR(920000 + RANDOM() * 20000)::INT)
-    -- UNION ALL
     SELECT CONCAT('
         SELECT
             s.id AS style_id,
@@ -68,8 +84,9 @@ WITH query_list AS (
         FROM styles AS s
         LEFT JOIN photos AS p ON p.styleId = s.id
         LEFT JOIN skus AS sk ON sk.styleId = s.id
-        WHERE s.productId = ', FLOOR(920000 + RANDOM() * 20000)::INT ,'
-        GROUP BY s.id, s.name, s.original_price, s.sale_price, s.default_style;
+        WHERE s.productId =', FLOOR(920000 + RANDOM() * 20000)::INT ,'
+        GROUP BY s.id, s.name, s.original_price, s.sale_price, s.default_style
+        ORDER BY s.id ASC;
     ')
 )
 SELECT ql.query, AVG(tq.duration) AS avg_duration

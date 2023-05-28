@@ -1,9 +1,12 @@
-import { sleep, check } from 'k6';
-import http from 'k6/http';
+import { sleep, check } from 'k6';    // eslint-disable-line
+import http from 'k6/http';           // eslint-disable-line
 
 export const options = {
-  vus: 1200,
-  duration: '30s',
+  stages: [
+    { durations: '30s', target: 2000 },
+    { duration: '30s', target: 2000 },
+    { duration: '30s', target: 0 },
+  ],
 };
 
 /**

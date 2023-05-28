@@ -2,6 +2,8 @@
 
 source .env
 
+
+
 if [ "$1" = "postgres" ]
 then
   echo You have selected "postgres"!

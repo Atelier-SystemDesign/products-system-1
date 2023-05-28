@@ -4,8 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "server-dev": "node ./server/app.js",
     "test": "jest --verbose",
-    "lint": "eslint --ext .jsx --ext .js ."
+    "lint": "eslint --ext .js .",
+    "seed": "chmod u+x ./scripts/seed.bash; ./scripts/seed.bash",
+    "bench": "chmod u+x ./scripts/benchmark.bash; ./scripts/benchmark.bash",
+    "stress": "chmod u+x ./scripts/stress.bash; ./scripts/stress.bash",
+
+    "dump": "chmod u+x ./scripts/dump.bash; ./scripts/dump.bash"
   },
   "repository": {
     "type": "git",
@@ -21,6 +27,20 @@
     "eslint": "^8.41.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "jest": "^29.5.0"
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "k6": "^0.0.0",
+    "morgan": "^1.10.0",
+    "neo4j-driver": "^5.8.1",
+    "pg": "^8.11.0",
+    "pg-mem": "^2.6.12",
+    "supertest": "^6.3.3",
+    "tcp-port-used": "^1.0.2"
   }
 }

@@ -4,6 +4,11 @@ node_modules/
 
 build/
 dist/
+dumps/
 
 lib-cov
 coverage
+
+**/raw_data
+
+**/log.txt

@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./server/app.js",
     "server-dev": "node ./server/app.js",
     "test": "jest --verbose",
     "lint": "eslint --ext .js .",
     "seed": "chmod u+x ./scripts/seed.bash; ./scripts/seed.bash",
     "bench": "chmod u+x ./scripts/benchmark.bash; ./scripts/benchmark.bash",
     "stress": "chmod u+x ./scripts/stress.bash; ./scripts/stress.bash",
-
-    "dump": "chmod u+x ./scripts/dump.bash; ./scripts/dump.bash"
+    "dump": "chmod u+x ./scripts/dump.bash; ./scripts/dump.bash",
+    "build": "docker build --build-arg ENV_FILE=./.env -t atelier-products .",
+    "docker": "docker run -p 3021:3021 --env-file=./.env atelier-products"
   },
   "repository": {
     "type": "git",

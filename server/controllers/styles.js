@@ -1,4 +1,6 @@
 const { styles } = require('../models');
+const redisClient = require('../../database/redis');
+const { generateCacheKey } = require('../utils');
 
 module.exports = {
   /**
@@ -36,6 +38,9 @@ module.exports = {
         return;
       }
       const results = (await styles.getAll(productId)).rows;
+      await redisClient
+        .set(generateCacheKey(req), JSON.stringify({ results, product_id: productId }));
+
       res.status(200).json({ results, product_id: productId });
     } catch (e) {
       res.status(500).send('A server error has occurred!!');

@@ -1,4 +1,4 @@
-const client = require('../../database/pg');
+const pool = require('../../database/pg');
 
 module.exports = {
   /**
@@ -16,7 +16,8 @@ module.exports = {
    */
   getAll: (page = 1, count = 5) => {
     const [start, end] = [(page - 1) * count + 1, (page) * count];
-    return client.query({
+
+    return pool.query({
       text: 'SELECT * FROM products WHERE ($1 <= id AND id <= $2)',
       values: [start, end],
     });
@@ -41,7 +42,7 @@ module.exports = {
    *
    * @param {number} productId
    */
-  getOne: (productId) => client.query({
+  getOne: (productId) => pool.query({
     text: `
       SELECT
         p.id,

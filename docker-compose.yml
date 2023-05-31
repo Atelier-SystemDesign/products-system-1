@@ -1,9 +1,21 @@
 version: '3'
 services:
-  app:
+  app1:
     build: .
     ports:
-      - 3021
+      - 81:3021
+    env_file:
+      - .env
+  app2:
+    build: .
+    ports:
+      - 82:3021
+    env_file:
+      - .env
+  app3:
+    build: .
+    ports:
+      - 83:3021
     env_file:
       - .env
   redis:
@@ -20,6 +32,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - app
+      - app1
+      - app2
+      - app3
 volumes:
   redis_data:

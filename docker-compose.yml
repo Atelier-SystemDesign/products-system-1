@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app1:
+    build: .
+    ports:
+      - 81:3021
+    env_file:
+      - .env
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - 6379:6379

@@ -25,30 +25,34 @@ module.exports = {
   getAll: (productId) => client.query({
     text: `
       SELECT
-          s.id AS style_id,
-          s.name,
-          s.original_price,
-          s.sale_price,
-          s.default_style AS "default?",
-          json_agg(
-              json_build_object(
-                  'thumbnail_url', p.thumbnail_url,
-                  'url', p.url
-              )
-          ) AS photos,
-          json_object_agg(
-              sk.id,
-              json_build_object(
-                  'quantity', sk.quantity,
-                  'size', sk.size
-              )
-          ) AS skus
-      FROM styles AS s
-      LEFT JOIN photos AS p ON p.styleId = s.id
-      LEFT JOIN skus AS sk ON sk.styleId = s.id
-      WHERE s.productId = $1
-      GROUP BY s.id, s.name, s.original_price, s.sale_price, s.default_style
-      ORDER BY s.id ASC;
+        styles.id AS style_id,
+        styles.name,
+        styles.original_price,
+        styles.sale_price,
+        styles.default_style AS "default?",
+        (
+          SELECT json_agg(json_build_object('thumbnail_url', p.thumbnail_url, 'url', p.url))
+            FROM (
+                SELECT DISTINCT ON (photos.thumbnail_url, photos.url)
+                    photos.thumbnail_url,
+                    photos.url
+                FROM photos
+                WHERE photos.styleid = styles.id
+            ) p
+        ) AS photos,
+        (
+          SELECT json_object_agg(s.id, json_build_object('quantity', s.quantity, 'size', s.size))
+            FROM (
+                SELECT DISTINCT ON (skus.id)
+                    skus.id,
+                    skus.quantity,
+                    skus.size
+                FROM skus
+                WHERE skus.styleid = styles.id
+            ) s
+        ) AS skus
+        FROM styles
+        WHERE styles.productid = $1
     `,
     values: [productId],
   }),

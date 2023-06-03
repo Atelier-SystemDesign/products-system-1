@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -15,6 +17,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static('public'));
 // app.use(cacheMiddleware);
+
+app.get(process.env.LOADER_ID, (req, res) => res.status(200).send(process.env.LOADER_ID));
 
 app.use('/api', router);
 
